@@ -8,6 +8,12 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 })
 export class LoginPage implements OnInit {
   form: FormGroup;
+  configs = {
+    isSignIn: true,
+    action: 'Login',
+    actionChange: 'Create account'
+  };
+  nameControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
 
   constructor(private formBuild: FormBuilder) {}
 
@@ -28,6 +34,18 @@ export class LoginPage implements OnInit {
 
   get password(): FormControl {
     return this.form.get('password') as FormControl;
+  }
+
+  get name(): FormControl {
+    return this.form.get('name') as FormControl;
+  }
+
+  changeAuthAction() {
+    this.configs.isSignIn = !this.configs.isSignIn;
+    const { isSignIn } = this.configs;
+    this.configs.action = isSignIn ? 'Login' : 'Sign Up';
+    this.configs.actionChange = isSignIn ? 'Create account' : 'Already have as account';
+    !isSignIn ? this.form.addControl('name', this.nameControl) : this.form.removeControl('name');
   }
 
   onSubmit(): void {

@@ -6,6 +6,16 @@
 
   <form [formGroup]="form" (submit)="onSubmit()">
 
+    <ng-container *ngIf="!configs.isSignIn">
+      <ion-item>
+        <ion-icon name="person" color="primary" slot="start"></ion-icon>
+        <ion-input type="text" placeholder="Name" formControlName="name"></ion-input>
+        <ion-note slot="end" color="danger" *ngIf="name.dirty && name.hasError('required')">Required</ion-note>
+        <ion-note slot="end" color="danger" *ngIf="name.dirty && name.hasError('minlength')">Min 3 characters
+        </ion-note>
+      </ion-item>
+    </ng-container>
+
     <ion-item>
       <ion-icon name="mail" color="primary" slot="start"></ion-icon>
       <ion-input type="email" placeholder="E-mail" formControlName="email" inputmode="email" autofocus="true">
@@ -22,11 +32,11 @@
       </ion-note>
     </ion-item>
 
-    <ion-button expand="block" type="submit" [disabled]="form.invalid">LOGIN</ion-button>
+    <ion-button expand="block" type="submit" [disabled]="form.invalid">{{ configs.action }}</ion-button>
 
   </form>
 
-  <ion-button expand="block" fill="clear">CREATE ACCOUNT</ion-button>
+  <ion-button expand="block" fill="clear" (click)="changeAuthAction()">{{ configs.actionChange }}</ion-button>
   <ion-button expand="block">
     <ion-icon name="logo-facebook" slot="start"></ion-icon>
     LOGIN WITH FACEBOOK
