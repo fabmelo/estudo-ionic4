@@ -21,6 +21,10 @@ export class AuthService {
     return operation;
   }
 
+  logout(): Promise<void> {
+    return this.angularFireAuth.auth.signOut();
+  }
+
   private signInWithEmail({ email, password }: User): Promise<auth.UserCredential> {
     return this.angularFireAuth.auth.signInWithEmailAndPassword(email, password);
   }
