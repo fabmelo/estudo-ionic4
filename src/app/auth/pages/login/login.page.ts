@@ -1,3 +1,5 @@
+import { AuthProvider } from './../../../core/services/auth.types';
+import { AuthService } from './../../../core/services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 
@@ -8,6 +10,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 })
 export class LoginPage implements OnInit {
   form: FormGroup;
+  authProviders = AuthProvider;
   configs = {
     isSignIn: true,
     action: 'Login',
@@ -15,7 +18,7 @@ export class LoginPage implements OnInit {
   };
   nameControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
 
-  constructor(private formBuild: FormBuilder) {}
+  constructor(private formBuild: FormBuilder, private authService: AuthService) {}
 
   ngOnInit() {
     this.createForm();
@@ -48,7 +51,17 @@ export class LoginPage implements OnInit {
     !isSignIn ? this.form.addControl('name', this.nameControl) : this.form.removeControl('name');
   }
 
-  onSubmit(): void {
-    console.log('Form: ', this.form.value);
+  async onSubmit(provider: AuthProvider): Promise<void> {
+    try {
+      const credentials = await this.authService.authenticate({
+        isSignIn: this.configs.isSignIn,
+        user: this.form.value,
+        provider
+      });
+      console.log('Authenticated: ', credentials);
+      console.log('Redirecting ...');
+    } catch (e) {
+      console.log('Auth Error: ', e);
+    }
   }
 }

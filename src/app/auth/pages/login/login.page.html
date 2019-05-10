@@ -4,7 +4,7 @@
     <ion-icon name="done-all" color="primary" class="icon-7em"></ion-icon>
   </h1>
 
-  <form [formGroup]="form" (submit)="onSubmit()">
+  <form [formGroup]="form" (submit)="onSubmit(authProviders.Email)">
 
     <ng-container *ngIf="!configs.isSignIn">
       <ion-item>
@@ -37,9 +37,9 @@
   </form>
 
   <ion-button expand="block" fill="clear" (click)="changeAuthAction()">{{ configs.actionChange }}</ion-button>
-  <ion-button expand="block">
+  <ion-button expand="block" (click)="onSubmit(authProviders.Facebook)">
     <ion-icon name="logo-facebook" slot="start"></ion-icon>
-    LOGIN WITH FACEBOOK
+    Login With Facebook
   </ion-button>
 
 </ion-content>
