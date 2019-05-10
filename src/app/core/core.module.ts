@@ -1,12 +1,19 @@
+import { environment } from './../../environments/environment';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 
 @NgModule({
-  imports: [IonicModule.forRoot()],
+  imports: [
+    IonicModule.forRoot(),
+    AngularFireAuthModule,
+    AngularFireModule.initializeApp(environment.firebase)
+  ],
   exports: [BrowserModule, IonicModule],
   providers: [
     StatusBar,
