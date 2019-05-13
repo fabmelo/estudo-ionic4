@@ -7,7 +7,7 @@
 <ion-content padding>
 
   <ion-list>
-    <ion-item>aprender ionic</ion-item>
+    <app-tasks-item *ngFor="let task of (tasks$ | async)" [task]="task"></app-tasks-item>
   </ion-list>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
