@@ -1,3 +1,5 @@
+import { OverlayService } from './../../../core/services/overlay.service';
+import { TasksService } from './../../services/tasks.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -9,7 +11,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 export class TaskSavePage implements OnInit {
   form: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private tasksService: TasksService,
+    private overlayService: OverlayService
+  ) {}
 
   ngOnInit(): void {
     this.createForm();
@@ -22,5 +28,19 @@ export class TaskSavePage implements OnInit {
     });
   }
 
-  onSubmit(): void {}
+  async onSubmit(): Promise<void> {
+    const loading = await this.overlayService.loading();
+    try {
+      const task = await this.tasksService.create(this.form.value);
+      await this.overlayService.toast({
+        message: `Task ${this.form.get('title').value } created!`
+      });
+    } catch (e) {
+      await this.overlayService.toast({
+        message: e.message
+      });
+    } finally {
+      loading.dismiss();
+    }
+  }
 }
