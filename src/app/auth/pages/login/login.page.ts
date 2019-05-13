@@ -3,6 +3,8 @@ import { AuthProvider } from './../../../core/services/auth.types';
 import { AuthService } from './../../../core/services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { NavController } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +24,9 @@ export class LoginPage implements OnInit {
   constructor(
     private formBuild: FormBuilder,
     private authService: AuthService,
-    private overlayService: OverlayService
+    private overlayService: OverlayService,
+    private navController: NavController,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -64,8 +68,9 @@ export class LoginPage implements OnInit {
         user: this.form.value,
         provider
       });
-      console.log('Authenticated: ', credentials);
-      console.log('Redirecting ...');
+      this.navController.navigateForward(
+        this.activatedRoute.snapshot.queryParamMap.get('redirect') || '/tasks'
+      );
     } catch (e) {
       await this.overlayService.toast({
         message: e.message
