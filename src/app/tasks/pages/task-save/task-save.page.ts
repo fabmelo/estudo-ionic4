@@ -1,3 +1,4 @@
+import { NavController } from '@ionic/angular';
 import { OverlayService } from './../../../core/services/overlay.service';
 import { TasksService } from './../../services/tasks.service';
 import { Component, OnInit } from '@angular/core';
@@ -14,7 +15,8 @@ export class TaskSavePage implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private tasksService: TasksService,
-    private overlayService: OverlayService
+    private overlayService: OverlayService,
+    private navController: NavController
   ) {}
 
   ngOnInit(): void {
@@ -29,12 +31,17 @@ export class TaskSavePage implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
-    const loading = await this.overlayService.loading();
+    const loading = await this.overlayService.loading({
+      message: 'Saving...'
+    });
     try {
       const task = await this.tasksService.create(this.form.value);
       await this.overlayService.toast({
-        message: `Task ${this.form.get('title').value } created!`
+        message: `Task ${this.form.get('title').value} created!`
       });
+      setTimeout(() => {
+        this.navController.navigateBack('/tasks');
+      }, 500);
     } catch (e) {
       await this.overlayService.toast({
         message: e.message
