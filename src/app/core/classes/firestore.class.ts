@@ -6,7 +6,7 @@ export abstract class Firestore<T extends { id: string }> {
 
   constructor(protected db: AngularFirestore) {}
 
-  protected setCollection(path: string, queryFn: QueryFn): void {
+  protected setCollection(path: string, queryFn?: QueryFn): void {
     this.collection = path ? this.db.collection(path, queryFn) : null;
   }
 
