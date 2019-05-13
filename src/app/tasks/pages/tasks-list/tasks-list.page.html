@@ -11,12 +11,14 @@
       <app-tasks-item *ngFor="let task of tasks" [task]="task"></app-tasks-item>
     </ng-container>
     <ng-template #noTasks>
-      <ion-item lines="none">No tasks yet...</ion-item>
+      <ion-item lines="none" color="danger">
+        No tasks yet...
+      </ion-item>
     </ng-template>
   </ion-list>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button>
+    <ion-fab-button [routerLink]="['/tasks/create']" routerDirection="forward">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
