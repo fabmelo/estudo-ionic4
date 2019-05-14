@@ -12,6 +12,10 @@ const routes: Routes = [
         loadChildren: './pages/task-save/task-save.module#TaskSavePageModule'
       },
       {
+        path: 'edit/:id',
+        loadChildren: './pages/task-save/task-save.module#TaskSavePageModule'
+      },
+      {
         path: '',
         loadChildren: './pages/tasks-list/tasks-list.module#TasksListPageModule'
       }

@@ -1,8 +1,10 @@
+import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { OverlayService } from './../../../core/services/overlay.service';
 import { TasksService } from './../../services/tasks.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-task-save',
@@ -11,16 +13,38 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class TaskSavePage implements OnInit {
   form: FormGroup;
+  pageTitle = '...';
+  taskId: string = undefined;
 
   constructor(
     private formBuilder: FormBuilder,
     private tasksService: TasksService,
     private overlayService: OverlayService,
-    private navController: NavController
+    private navController: NavController,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.createForm();
+
+    this.init();
+  }
+
+  init(): void {
+    const taskId = this.route.snapshot.paramMap.get('id');
+    if (!taskId) {
+      this.pageTitle = 'Create Task';
+      return;
+    }
+    this.pageTitle = 'Edit Task';
+    this.taskId = taskId;
+    this.tasksService
+      .getById(taskId)
+      .pipe(take(1))
+      .subscribe(({ title, done }) => {
+        this.form.get('title').setValue(title);
+        this.form.get('done').setValue(done);
+      });
   }
 
   private createForm() {
@@ -35,10 +59,21 @@ export class TaskSavePage implements OnInit {
       message: 'Saving...'
     });
     try {
-      const task = await this.tasksService.create(this.form.value);
-      await this.overlayService.toast({
-        message: `Task ${this.form.get('title').value} created!`
-      });
+      if (!this.taskId) {
+        await this.tasksService.create(this.form.value);
+        await this.overlayService.toast({
+          message: `Task ${this.form.get('title').value} created!`
+        });
+      } else {
+        await this.tasksService.update({
+          id: this.taskId,
+          ...this.form.value
+        });
+        await this.overlayService.toast({
+          message: `Task ${this.form.get('title').value} updated!`
+        });
+      }
+
       setTimeout(() => {
         this.navController.navigateBack('/tasks');
       }, 500);
