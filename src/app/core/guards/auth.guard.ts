@@ -5,21 +5,18 @@ import {
   RouterStateSnapshot,
   Router,
   CanActivateChild,
+  CanActivate,
   CanLoad,
   Route,
   UrlSegment
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap, take } from 'rxjs/operators';
-import { CanActivate } from '@angular/router/src/utils/preactivation';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
-  path: ActivatedRouteSnapshot[];
-  route: ActivatedRouteSnapshot;
-
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
