@@ -1,3 +1,4 @@
+import { AuthService } from 'src/app/core/services/auth.service';
 import { Component } from '@angular/core';
 
 import { Platform } from '@ionic/angular';
@@ -9,13 +10,14 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
-
-  pages: {url: string; icon: string; text: string; direction: string}[];
+  pages: { url: string; icon: string; text: string; direction: string }[];
+  user: firebase.User;
 
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    private authService: AuthService
   ) {
     this.initializeApp();
   }
@@ -25,6 +27,11 @@ export class AppComponent {
       { url: '/tasks', icon: 'checkmark', text: 'Tasks', direction: 'back' },
       { url: '/tasks/create', icon: 'add', text: 'New Task', direction: 'forward' }
     ];
+
+    this.authService.authState$.subscribe(user => {
+      this.user = user;
+    });
+
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
