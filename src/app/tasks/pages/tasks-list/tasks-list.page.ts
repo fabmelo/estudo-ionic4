@@ -1,9 +1,10 @@
 import { OverlayService } from './../../../core/services/overlay.service';
 import { NavController } from '@ionic/angular';
 import { TasksService } from './../../services/tasks.service';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { Task } from '../../models/tasks.model';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tasks-list',
@@ -19,8 +20,12 @@ export class TasksListPage implements OnInit {
     private overlayService: OverlayService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit(): Promise<void> {
+    const loading = await this.overlayService.loading({
+      message: 'Loading list'
+    });
     this.tasks$ = this.tasksService.getAll();
+    this.tasks$.pipe(take(1)).subscribe(() => loading.dismiss());
   }
 
   onUpdate(task: Task): void {
